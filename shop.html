@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ФлоМастер — Каталог</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* модальное окно */
+    .modal-backdrop{ position:fixed; inset:0; background: rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; padding:16px; z-index:50; }
+    .modal{ max-width: 920px; width:100%; background:#fff; border-radius:18px; border:1px solid #eee; overflow:hidden; }
+    .modal-head{ display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 16px; border-bottom:1px solid #eee; }
+    .xbtn{ border:1px solid #ddd; background:#fff; border-radius:12px; padding:8px 12px; cursor:pointer; }
+    .modal-body{ display:grid; grid-template-columns: 1.1fr .9fr; gap:16px; padding:16px; }
+    .gallery-main{ width:100%; height: 360px; object-fit:cover; border-radius:14px; border:1px solid #eee; touch-action: pan-y;
+}
+    .thumbs{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .thumbs img{ width:76px; height:76px; object-fit:cover; border-radius:12px; border:1px solid #eee; cursor:pointer; }
+    .thumbs img.active{ outline: 2px solid #111; }
+    .detail-list{ margin:10px 0 0; padding-left:18px; color:#444; line-height:1.6; }
+    @media (max-width: 900px){
+      .modal-body{ grid-template-columns: 1fr; }
+      .gallery-main{ height: 280px; }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -22,7 +40,7 @@
 
   <main class="wrap section">
     <h1 style="font-size:34px; margin: 10px 0 6px;">Каталог</h1>
-    <p class="muted" style="margin-top:0;">Категории и поиск — чтобы быстро находить изделия.</p>
+    <p class="muted" style="margin-top:0;">Нажми «Подробнее», чтобы посмотреть все фотографии и описание.</p>
 
     <div class="toolbar">
       <select id="category"></select>
@@ -36,6 +54,46 @@
     <div class="wrap">© <span id="y"></span> ФлоМастер</div>
   </footer>
 
+  <!-- Модальное окно -->
+  <div id="backdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-head">
+        <strong id="mTitle">Товар</strong>
+        <button class="xbtn" id="closeBtn">Закрыть</button>
+      </div>
+      <div class="modal-body">
+
+ <!-- Левая колонка: фото -->        
+<div style="position:relative;">
+  <button id="prevImg" class="xbtn" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); z-index:2;">
+    ◀
+  </button>
+
+  <img id="mainImg" class="gallery-main" src="" alt="">
+
+  <button id="nextImg" class="xbtn" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); z-index:2;">
+    ▶
+  </button>
+
+  <div id="thumbs" class="thumbs"></div>
+
+</div>
+
+<!-- Правая колонка: описание -->
+        <div>
+          <div class="muted" id="mBadges"></div>
+          <div class="price" id="mPrice"></div>
+          <p class="muted" id="mDesc"></p>
+          <ul class="detail-list" id="mDetails"></ul>
+          <p style="margin-top:14px;">
+            <a class="btn primary" id="mOrder" target="_blank" rel="noreferrer" href="#">Заказать / Сделать запрос
+</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="products.js"></script>
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
@@ -43,6 +101,22 @@
     const $cat = document.getElementById("category");
     const $q = document.getElementById("q");
     const $list = document.getElementById("list");
+
+    const $backdrop = document.getElementById("backdrop");
+    const $closeBtn = document.getElementById("closeBtn");
+    const $mTitle = document.getElementById("mTitle");
+    const $mainImg = document.getElementById("mainImg");
+    const $thumbs = document.getElementById("thumbs");
+const $prevImg = document.getElementById("prevImg");
+const $nextImg = document.getElementById("nextImg");
+
+let currentImages = [];
+let currentIndex = 0;
+    const $mBadges = document.getElementById("mBadges");
+    const $mPrice = document.getElementById("mPrice");
+    const $mDesc = document.getElementById("mDesc");
+    const $mDetails = document.getElementById("mDetails");
+    const $mOrder = document.getElementById("mOrder");
 
     const categories = ["Все", ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
     $cat.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join("");
@@ -56,36 +130,151 @@
       return `${CONTACTS.telegram}?text=${text}`;
     }
 
+    function openModal(p){
+      $mTitle.textContent = p.title;
+      $mBadges.innerHTML = `<span class="badge">${p.category}</span> <span class="badge">${p.availability}</span>`;
+      $mPrice.textContent = `${p.price}${p.currency}`;
+      $mDesc.textContent = p.description || "";
+
+      currentImages = (p.images && p.images.length) ? p.images : [p.image].filter(Boolean);
+currentIndex = 0;
+
+$mainImg.src = currentImages[0] || "";
+$mainImg.alt = p.title;
+
+    $thumbs.innerHTML = currentImages.map((src, i) =>
+  `<img data-i="${i}" src="${src}" alt="${p.title} фото ${i+1}">`
+).join("");
+
+const setActive = (idx) => {
+  const nodes = Array.from($thumbs.querySelectorAll("img"));
+  nodes.forEach((n, i) => n.classList.toggle("active", i === idx));
+};
+
+setActive(0);
+
+$thumbs.onclick = (e) => {
+  const t = e.target.closest("img");
+  if(!t) return;
+  showIndex(Number(t.dataset.i));
+};
+
+
+      const details = Array.isArray(p.details) ? p.details : [];
+      $mDetails.innerHTML = details.map(x => `<li>${x}</li>`).join("");
+
+      $mOrder.href = requestLink(p);
+
+      $backdrop.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal(){
+      $backdrop.style.display = "none";
+      document.body.style.overflow = "";
+    }
+
+    $closeBtn.addEventListener("click", closeModal);
+    $backdrop.addEventListener("click", (e) => {
+      if(e.target === $backdrop) closeModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape") closeModal();
+    });
+
     function render(){
       const c = $cat.value;
       const query = $q.value.trim().toLowerCase();
 
       const filtered = PRODUCTS.filter(p => {
         const inCat = (c === "Все") || (p.category === c);
-        const inQ = !query || (p.title + " " + p.description).toLowerCase().includes(query);
+        const inQ = !query || (p.title + " " + (p.description||"")).toLowerCase().includes(query);
         return inCat && inQ;
       });
 
       $list.innerHTML = filtered.map(p => `
         <article class="card">
-          <img src="${p.image}" alt="${p.title}">
+          <img src="${p.image}" alt="${p.title}" data-open="${p.id}" style="cursor:pointer;">
           <div class="muted" style="margin-top:8px;">
             <span class="badge">${p.category}</span>
             <span class="badge">${p.availability}</span>
           </div>
           <h3 style="margin:10px 0 0;">${p.title}</h3>
           <div class="price">${p.price}${p.currency}</div>
-          <p class="muted" style="margin:0 0 12px;">${p.description}</p>
-          <a class="btn primary" target="_blank" rel="noreferrer" href="${requestLink(p)}">
-            Заказать / Сделать запрос
-          </a>
+          <p class="muted" style="margin:0 0 12px;">${p.description || ""}</p>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn" href="#" data-open="${p.id}">Подробнее</a>
+            <a class="btn primary" target="_blank" rel="noreferrer" href="${requestLink(p)}">Заказать</a>
+          </div>
         </article>
       `).join("") || `<p class="muted">Ничего не найдено.</p>`;
+
+      $list.querySelectorAll("[data-open]").forEach(a => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const id = a.getAttribute("data-open");
+          const p = PRODUCTS.find(x => x.id === id);
+          if(p) openModal(p);
+        });
+      });
     }
+$prevImg.addEventListener("click", () => showIndex(currentIndex - 1));
+$nextImg.addEventListener("click", () => showIndex(currentIndex + 1));
+
 
     $cat.addEventListener("change", render);
     $q.addEventListener("input", render);
     render();
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+$mainImg.addEventListener("touchstart", (e) => {
+  if (!e.touches || e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+$mainImg.addEventListener("touchend", (e) => {
+  if (!currentImages.length) return;
+
+  const t = e.changedTouches && e.changedTouches[0];
+  if (!t) return;
+
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+
+  // если жест больше вертикальный — не считаем свайпом
+  if (Math.abs(dy) > Math.abs(dx)) return;
+
+  // порог, чтобы случайные касания не листали
+  const threshold = 40; // пикселей
+  if (Math.abs(dx) < threshold) return;
+
+  if (dx < 0) {
+    // свайп влево -> следующее фото
+    showIndex(currentIndex + 1);
+  } else {
+    // свайп вправо -> предыдущее фото
+    showIndex(currentIndex - 1);
+  }
+}, { passive: true });
+
   </script>
+
+function updateThumbs()
+function showIndex(idx){
+  if (!currentImages.length) return;
+  currentIndex = (idx + currentImages.length) % currentImages.length;
+  $mainImg.src = currentImages[currentIndex];
+  updateThumbs();
+}
+
+{
+  const nodes = Array.from($thumbs.querySelectorAll("img"));
+  nodes.forEach((n, i) => n.classList.toggle("active", i === currentIndex));
+}
+
 </body>
 </html>
