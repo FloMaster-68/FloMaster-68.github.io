@@ -156,7 +156,9 @@ setActive(0);
 $thumbs.onclick = (e) => {
   const t = e.target.closest("img");
   if(!t) return;
-  showIndex(Number(t.dataset.i));
+  currentIndex = Number(t.dataset.i);
+  $mainImg.src = currentImages[currentIndex];
+  updateThumbs();
 };
 
 
@@ -219,6 +221,19 @@ $thumbs.onclick = (e) => {
         });
       });
     }
+
+function updateThumbs(){
+  const nodes = Array.from($thumbs.querySelectorAll("img"));
+  nodes.forEach((n, i) => n.classList.toggle("active", i === currentIndex));
+}
+
+function showIndex(idx){
+  if (!currentImages.length) return;
+  currentIndex = (idx + currentImages.length) % currentImages.length;
+  $mainImg.src = currentImages[currentIndex];
+  updateThumbs();
+}
+
 $prevImg.addEventListener("click", () => showIndex(currentIndex - 1));
 $nextImg.addEventListener("click", () => showIndex(currentIndex + 1));
 
@@ -261,20 +276,9 @@ $mainImg.addEventListener("touchend", (e) => {
   }
 }, { passive: true });
 
+
   </script>
 
-function updateThumbs()
-function showIndex(idx){
-  if (!currentImages.length) return;
-  currentIndex = (idx + currentImages.length) % currentImages.length;
-  $mainImg.src = currentImages[currentIndex];
-  updateThumbs();
-}
-
-{
-  const nodes = Array.from($thumbs.querySelectorAll("img"));
-  nodes.forEach((n, i) => n.classList.toggle("active", i === currentIndex));
-}
 
 </body>
 </html>
