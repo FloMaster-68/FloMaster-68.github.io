@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ФлоМастер — Каталог</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <nav>
+        <div class="brand">ФлоМастер</div>
+        <div class="links">
+          <a href="index.html">Главная</a>
+          <a href="shop.html">Каталог</a>
+          <a href="contacts.html">Контакты</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap section">
+    <h1 style="font-size:34px; margin: 10px 0 6px;">Каталог</h1>
+    <p class="muted" style="margin-top:0;">Категории и поиск — чтобы быстро находить изделия.</p>
+
+    <div class="toolbar">
+      <select id="category"></select>
+      <input id="q" type="search" placeholder="Поиск по названию/описанию…" />
+    </div>
+
+    <div id="list" class="grid3"></div>
+  </main>
+
+  <footer>
+    <div class="wrap">© <span id="y"></span> ФлоМастер</div>
+  </footer>
+
+  <script src="products.js"></script>
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    const $cat = document.getElementById("category");
+    const $q = document.getElementById("q");
+    const $list = document.getElementById("list");
+
+    const categories = ["Все", ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
+    $cat.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join("");
+
+    function requestLink(p){
+      const text = encodeURIComponent(
+        `Здравствуйте! Хочу сделать запрос в ФлоМастер.\n` +
+        `Изделие: ${p.title}\nКатегория: ${p.category}\nЦена: ${p.price}${p.currency}\nАртикул: ${p.id}\n` +
+        `Пожалуйста, подскажите наличие/срок изготовления и доставку.`
+      );
+      return `${CONTACTS.telegram}?text=${text}`;
+    }
+
+    function render(){
+      const c = $cat.value;
+      const query = $q.value.trim().toLowerCase();
+
+      const filtered = PRODUCTS.filter(p => {
+        const inCat = (c === "Все") || (p.category === c);
+        const inQ = !query || (p.title + " " + p.description).toLowerCase().includes(query);
+        return inCat && inQ;
+      });
+
+      $list.innerHTML = filtered.map(p => `
+        <article class="card">
+          <img src="${p.image}" alt="${p.title}">
+          <div class="muted" style="margin-top:8px;">
+            <span class="badge">${p.category}</span>
+            <span class="badge">${p.availability}</span>
+          </div>
+          <h3 style="margin:10px 0 0;">${p.title}</h3>
+          <div class="price">${p.price}${p.currency}</div>
+          <p class="muted" style="margin:0 0 12px;">${p.description}</p>
+          <a class="btn primary" target="_blank" rel="noreferrer" href="${requestLink(p)}">
+            Заказать / Сделать запрос
+          </a>
+        </article>
+      `).join("") || `<p class="muted">Ничего не найдено.</p>`;
+    }
+
+    $cat.addEventListener("change", render);
+    $q.addEventListener("input", render);
+    render();
+  </script>
+</body>
+</html>

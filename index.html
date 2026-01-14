@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ФлоМастер — Главная</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <nav>
+        <div class="brand">ФлоМастер</div>
+        <div class="links">
+          <a href="index.html">Главная</a>
+          <a href="shop.html">Каталог</a>
+          <a href="contacts.html">Контакты</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Мебель и декор ручной работы</h1>
+        <p>История бренда ФлоМастер, вдохновение и философия.</p>
+        <a class="btn primary" href="shop.html">Смотреть каталог</a>
+        <a class="btn" href="contacts.html" style="margin-left:8px;">Сделать запрос</a>
+      </div>
+      <img src="img/hero.jpg" alt="Коллекция" />
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">© <span id="y"></span> ФлоМастер</div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

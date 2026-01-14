@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ФлоМастер — Контакты</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <nav>
+        <div class="brand">ФлоМастер</div>
+        <div class="links">
+          <a href="index.html">Главная</a>
+          <a href="shop.html">Каталог</a>
+          <a href="contacts.html">Контакты</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap section">
+    <h1 style="font-size:34px; margin: 10px 0 6px;">Контакты</h1>
+
+    <div class="card">
+      <p class="muted">Нажми кнопку — откроется Telegram с готовым текстом.</p>
+
+      <p>
+        <a class="btn primary"
+           href="https://t.me/Flo68Master?text=Здравствуйте!%20Хочу%20сделать%20запрос%20в%20ФлоМастер."
+           target="_blank" rel="noreferrer">
+          Написать в Telegram
+        </a>
+      </p>
+
+      <p class="muted" style="margin-bottom:0;">Telegram: @Flo68Master</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">© <span id="y"></span> ФлоМастер</div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
