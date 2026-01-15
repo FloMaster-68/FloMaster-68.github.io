@@ -7,43 +7,69 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <nav>
-        <div class="brand">ФлоМастер</div>
-        <div class="links">
-          <a href="index.html">Главная</a>
-          <a href="shop.html">Каталог</a>
-          <a href="contacts.html">Контакты</a>
-        </div>
-      </nav>
-    </div>
-  </header>
 
-  <main class="wrap section">
-    <h1 style="font-size:34px; margin: 10px 0 6px;">Контакты</h1>
+<header>
+  <div class="wrap">
+    <nav>
+      <div class="brand"><span class="mark"></span>ФлоМастер</div>
+      <div class="links">
+        <a href="index.html">Главная</a>
+        <a href="shop.html">Каталог</a>
+        <a href="contacts.html">Контакты</a>
+      </div>
+    </nav>
+  </div>
+</header>
 
-    <div class="card">
-      <p class="muted">Нажми кнопку — откроется Telegram с готовым текстом.</p>
+<main class="wrap section">
 
-      <p>
-        <a class="btn primary"
-           href="https://t.me/Flo68Master?text=Здравствуйте!%20Хочу%20сделать%20запрос%20в%20ФлоМастер."
-           target="_blank" rel="noreferrer">
-          Написать в Telegram
-        </a>
-      </p>
+  <h1>Контакты</h1>
 
-      <p class="muted" style="margin-bottom:0;">Telegram: @Flo68Master</p>
-    </div>
-  </main>
+  <p class="muted" style="max-width:48ch;">
+    Если вы хотите сделать заказ, задать вопрос или обсудить индивидуальное изделие —
+    напишите нам в Telegram.
+  </p>
 
-  <footer>
-    <div class="wrap">© <span id="y"></span> ФлоМастер</div>
-  </footer>
+  <p style="margin:24px 0 28px;">
+    <a class="btn primary" href="#" id="orderLink" target="_blank" rel="noreferrer">
+  Написать для заказа
+</a>
 
-  <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
-  </script>
+  </p>
+
+  <p class="muted" style="max-width:52ch;">
+    Мы отвечаем лично, помогаем с выбором, сроками и деталями.
+    Все изделия создаются вручную из натурального дерева.
+  </p>
+
+  <hr class="hr">
+
+  <p class="muted" style="max-width:52ch;">
+    В Telegram-канале мы делимся процессом, новыми работами и источниками вдохновения.
+  </p>
+
+  <p>
+    <a class="btn" href="#" id="channelLink" target="_blank" rel="noreferrer">
+  Перейти в канал
+</a>
+
+  </p>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    © <span id="y"></span> ФлоМастер
+  </div>
+</footer>
+
+<script>
+  document.getElementById("y").textContent = new Date().getFullYear();
+
+  /* ВРЕМЕННЫЕ ССЫЛКИ — заменим позже */
+  document.getElementById("orderLink").href = "https://t.me/Irina_AstroZvet";
+  document.getElementById("channelLink").href = "https://t.me/Flo68Master";
+</script>
+
 </body>
 </html>

@@ -10,8 +10,43 @@
     .modal-backdrop{ position:fixed; inset:0; background: rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; padding:16px; z-index:50; }
     .modal{ max-width: 920px; width:100%; background:#fff; border-radius:18px; border:1px solid #eee; overflow:hidden; }
     .modal-head{ display:flex; justify-content:space-between; gap:12px; align-items:center; padding:14px 16px; border-bottom:1px solid #eee; }
-    .xbtn{ border:1px solid #ddd; background:#fff; border-radius:12px; padding:8px 12px; cursor:pointer; }
+    .xbtn{ border:1px solid #ddd; background:#fff; border-radius:12px; padding:8px 12px; cursor:pointer; box-shadow: 0 6px 18px rgba(0,0,0,.10); }
     .modal-body{ display:grid; grid-template-columns: 1.1fr .9fr; gap:16px; padding:16px; }
+
+.modal-body .gallery-arrow{
+  opacity:0;
+}
+
+.modal-body:hover .gallery-arrow{
+  opacity:.75;
+}
+
+/* Стрелки галереи */
+.gallery-arrow{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+
+  background: rgba(255,255,255,.55);
+  backdrop-filter: blur(6px);
+
+  border: 1px solid rgba(255,255,255,.6);
+  box-shadow: 0 8px 22px rgba(0,0,0,.18);
+
+  opacity:.6;
+  transition: opacity .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.gallery-arrow:hover{
+  opacity:1;
+  transform: scale(1.05);
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+}
+
     .gallery-main{ width:100%; height: 360px; object-fit:cover; border-radius:14px; border:1px solid #eee; touch-action: pan-y;
 }
     .thumbs{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
@@ -40,7 +75,9 @@
 
   <main class="wrap section">
     <h1 style="font-size:34px; margin: 10px 0 6px;">Каталог</h1>
-    <p class="muted" style="margin-top:0;">Нажми «Подробнее», чтобы посмотреть все фотографии и описание.</p>
+    <p class="muted" style="margin:0 0 12px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+  Нажми «Подробнее», чтобы посмотреть все фотографии и описание.
+</p>
 
     <div class="toolbar">
       <select id="category"></select>
@@ -65,15 +102,17 @@
 
  <!-- Левая колонка: фото -->        
 <div style="position:relative;">
-  <button id="prevImg" class="xbtn" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); z-index:2;">
-    ◀
-  </button>
+  <button id="prevImg" class="xbtn gallery-arrow"
+  style="position:absolute; left:12px; top:50%; transform:translateY(-50%); z-index:2;">
+  ◀
+</button>
 
   <img id="mainImg" class="gallery-main" src="" alt="">
 
-  <button id="nextImg" class="xbtn" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); z-index:2;">
-    ▶
-  </button>
+  <button id="nextImg" class="xbtn gallery-arrow"
+  style="position:absolute; right:12px; top:50%; transform:translateY(-50%); z-index:2;">
+  ▶
+</button>
 
   <div id="thumbs" class="thumbs"></div>
 
@@ -117,9 +156,11 @@ let currentIndex = 0;
     const $mDesc = document.getElementById("mDesc");
     const $mDetails = document.getElementById("mDetails");
     const $mOrder = document.getElementById("mOrder");
-
-    const categories = ["Все", ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
+    
+const categories = ["Все", ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
     $cat.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join("");
+
+const ORDER_TG = "https://t.me/Irina_AstroZvet";
 
     function requestLink(p){
       const text = encodeURIComponent(
@@ -127,7 +168,7 @@ let currentIndex = 0;
         `Изделие: ${p.title}\nКатегория: ${p.category}\nЦена: ${p.price}${p.currency}\nАртикул: ${p.id}\n` +
         `Пожалуйста, подскажите наличие/срок изготовления и доставку.`
       );
-      return `${CONTACTS.telegram}?text=${text}`;
+      return `${ORDER_TG}?text=${text}`;
     }
 
     function openModal(p){

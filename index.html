@@ -10,7 +10,7 @@
   <header>
     <div class="wrap">
       <nav>
-        <div class="brand">ФлоМастер</div>
+        <div class="brand"><span class="mark"></span>ФлоМастер</div>
         <div class="links">
           <a href="index.html">Главная</a>
           <a href="shop.html">Каталог</a>
@@ -20,25 +20,57 @@
     </div>
   </header>
 
+  <main>
+
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <h1>Мебель и декор ручной работы</h1>
-        <p>История бренда ФлоМастер, вдохновение и философия.</p>
-        <a class="btn primary" href="shop.html">Смотреть каталог</a>
-        <a class="btn" href="contacts.html" style="margin-left:8px;">Сделать запрос</a>
+        <h1>ФлоМастер</h1>
+        <p>Мебель и декор из натурального дерева. Вдохновение — лес, тишина и тёплый свет дома.</p>
+        <p style="margin-top:14px;">
+          <a class="btn primary" href="shop.html">Смотреть каталог</a>
+          <a class="btn" href="contacts.html" style="margin-left:10px;">Сделать запрос</a>
+        </p>
+        <p class="muted" style="margin-top:10px;">Каждое изделие — ручная работа, с уважением к материалу.</p>
       </div>
-      <img src="img/hero.jpg" alt="Коллекция" />
+
+      <div>
+        <img src="img/hero.jpg" alt="ФлоМастер — изделия из дерева">
+      </div>
     </div>
   </section>
 
+<hr class="hr">
+
+  <section class="section">
+    <div class="wrap grid3">
+      <div class="card">
+        <h3>История</h3>
+        <p class="muted">ФлоМастер родился из любви к дереву и желанию создавать вещи, которые живут в доме долго.</p>
+      </div>
+      <div class="card">
+        <h3>Материал</h3>
+        <p class="muted">Натуральная фактура, тёплые оттенки и надёжность. Дерево всегда “дышит” и делает дом уютнее.</p>
+      </div>
+      <div class="card">
+        <h3>Под заказ</h3>
+        <p class="muted">Можно обсудить размер, цвет, покрытие и сроки. Напиши — мы подберём лучшее решение.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
   <footer>
-    <div class="wrap">© <span id="y"></span> ФлоМастер</div>
-  </footer>
+  <div class="wrap">
+    © <span id="y"></span> ФлоМастер
+  </div>
+</footer>
+
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
-
