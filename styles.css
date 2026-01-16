@@ -296,3 +296,12 @@ footer .wrap{
     height: 240px;
   }
 }
+
+/* Мобильные отступы для основного контента */
+@media (max-width: 600px){
+  main.wrap{
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+}
+
