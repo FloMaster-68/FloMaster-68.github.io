@@ -274,3 +274,25 @@ footer .wrap{
   border:0;
   margin: 18px 0;
 }
+
+/* Главная: комфортная ширина текста */
+.page-text{
+  max-width: 920px; /* под десктоп */
+}
+
+@media (max-width: 900px){
+  .page-text{
+    max-width: 100%;
+  }
+}
+
+/* Главная: фото в истории */
+.about-photo{
+  height: 380px;
+}
+
+@media (max-width: 900px){
+  .about-photo{
+    height: 240px;
+  }
+}
